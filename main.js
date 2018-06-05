@@ -3,8 +3,6 @@ getData()
 async function getData() {
   const imageFilenames = getImageFilenames()
   const imageObjects = await Promise.all(imageFilenames.map(filename => getImageFromUrl(filename)))
-  console.log("LOL")
-  console.log(imageObjects)
 }
 
 function getImageFilenames() {
@@ -14,7 +12,7 @@ function getImageFilenames() {
     'dagupan',
     'quezon',
     'tacloban'
-]
+  ]
 
   const filesInDirectories = directories.map(d => {
     let i = 1
