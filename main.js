@@ -1,4 +1,14 @@
-const directories = [
+getData()
+
+async function getData() {
+  const imageFilenames = getImageFilenames()
+  const imageObjects = await Promise.all(imageFilenames.map(filename => getImageFromUrl(filename)))
+  console.log("LOL")
+  console.log(imageObjects)
+}
+
+function getImageFilenames() {
+  const directories = [
     'butuan',
     'cebu',
     'dagupan',
@@ -6,32 +16,24 @@ const directories = [
     'tacloban'
 ]
 
-/**
- * Pads a string with zeros on the left.
- * 
- * @param {String} str String to pad
- * @param {Number} x Number of characters expected 
- */
-const zeroPad = (str, x) => {
-  const remaining = x - str.length
-  return `${"0".repeat(remaining)}${str}`
+  const filesInDirectories = directories.map(d => {
+    let i = 1
+    return Array(30).fill(1).map(() => `/data/${d}/${d}-${zeroPad(`${i++}`, 2)}.jpg`)
+  })
+
+  const imageFilenames = filesInDirectories.reduce((files, lst) => {
+    return [...lst, ...files]
+  }, [])
+
+  return imageFilenames
 }
-
-const filesInDirectories = directories.map(d => {
-  let i = 1
-  return Array(30).fill(1).map(() => `/data/${d}-${zeroPad(`${i++}`, 2)}.jpg`)
-})
-
-const imageFilenames = filesInDirectories.reduce((files, lst) => {
-  return [...lst, ...files]
-}, [])
 
 /**
  * Gets the image from the URL and constructs an Image object.
  * 
  * @param {String} src URL of image 
  */
-const getImageFromUrl = async (src) => {
+async function getImageFromUrl (src) {
   const image = new Image(1700, 2800)
   image.src = src
   image.crossOrigin = "Anonymous"
@@ -49,10 +51,13 @@ const getImageFromUrl = async (src) => {
   })
 }
 
-const getData = async () => {
-  console.log("LOL")
-  const imageObjects = await Promise.all(imageFilenames.map(filename => getImageFromUrl(filename)))
-  console.log(imageObjects)
+/**
+ * Pads a string with zeros on the left.
+ * 
+ * @param {String} str String to pad
+ * @param {Number} x Number of characters expected 
+ */
+function zeroPad(str, x) {
+  const remaining = x - str.length
+  return `${"0".repeat(remaining)}${str}`
 }
-
-getData()
